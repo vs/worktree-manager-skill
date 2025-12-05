@@ -1,5 +1,7 @@
 # Worktree Manager
 
+![Worktree Manager](cover.png)
+
 A Claude Code skill for managing parallel development environments using git worktrees.
 
 ## Installation
