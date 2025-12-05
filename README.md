@@ -8,10 +8,10 @@ Clone this repo into your Claude skills directory:
 
 ```bash
 # Global installation (available in all projects)
-git clone https://github.com/YOUR_USERNAME/worktree-manager-skill ~/.claude/skills/worktree-manager
+git clone git@github.com:Wirasm/worktree-manager-skill.git ~/.claude/skills/worktree-manager
 
 # Or project-specific (available only in that project)
-git clone https://github.com/YOUR_USERNAME/worktree-manager-skill .claude/skills/worktree-manager
+git clone git@github.com:Wirasm/worktree-manager-skill.git .claude/skills/worktree-manager
 ```
 
 Restart Claude Code after installation.
