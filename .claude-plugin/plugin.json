@@ -1,0 +1,21 @@
+{
+  "name": "worktree-manager-plugin",
+  "version": "1.0.0",
+  "description": "Create, manage, and cleanup git worktrees with Claude Code agents across all projects",
+  "author": {
+    "name": "Wirasm",
+    "url": "https://github.com/Wirasm"
+  },
+  "homepage": "https://github.com/Wirasm/worktree-manager-skill",
+  "repository": "https://github.com/Wirasm/worktree-manager-skill",
+  "license": "MIT",
+  "keywords": [
+    "worktree",
+    "git",
+    "agents",
+    "development",
+    "parallel-development",
+    "workflow"
+  ],
+  "skills": "./skills/"
+}
