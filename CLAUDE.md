@@ -11,20 +11,35 @@ This is a Claude Code skill for managing parallel development environments using
 ## Architecture
 
 ### File Structure
+
+This repository follows the Claude Code marketplace plugin structure:
+
 ```
 .
-├── config.json              # Skill configuration (terminal, shell, port pool)
-├── SKILL.md                 # Comprehensive skill documentation for Claude
-├── scripts/                 # Helper bash scripts (all operations can be done manually)
-│   ├── allocate-ports.sh    # Allocate N ports from global pool
-│   ├── register.sh          # Add worktree entry to global registry
-│   ├── launch-agent.sh      # Open terminal window with Claude Code
-│   ├── status.sh            # Show all worktrees (globally or per-project)
-│   ├── cleanup.sh           # Remove worktree, release ports, optionally delete branch
-│   └── release-ports.sh     # Release ports back to pool
-└── templates/
-    └── worktree.json        # Optional project-specific config schema
+├── .claude-plugin/
+│   ├── plugin.json          # Plugin manifest for marketplace
+│   └── marketplace.json     # Marketplace catalog for distribution
+├── skills/
+│   └── worktree-manager/    # The skill itself
+│       ├── SKILL.md         # Comprehensive skill documentation for Claude
+│       ├── config.json      # Skill configuration (terminal, shell, port pool)
+│       ├── scripts/         # Helper bash scripts (all operations can be done manually)
+│       │   ├── allocate-ports.sh    # Allocate N ports from global pool
+│       │   ├── register.sh          # Add worktree entry to global registry
+│       │   ├── launch-agent.sh      # Open terminal window with Claude Code
+│       │   ├── status.sh            # Show all worktrees (globally or per-project)
+│       │   ├── cleanup.sh           # Remove worktree, release ports, optionally delete branch
+│       │   └── release-ports.sh     # Release ports back to pool
+│       └── templates/
+│           └── worktree.json        # Optional project-specific config schema
+├── CLAUDE.md                # This file - architecture guide for Claude Code
+├── README.md                # User-facing documentation
+└── cover.png                # Skill cover image
 ```
+
+**Installation locations:**
+- Marketplace install: `~/.claude/plugins/worktree-manager-plugin/`
+- Manual install: `~/.claude/plugins/worktree-manager/`
 
 ### Global Registry Schema
 
@@ -69,22 +84,27 @@ Command: `echo "feature/auth" | tr '/' '-'`
 
 ### Testing Scripts
 
+All scripts are located in `skills/worktree-manager/scripts/`:
+
 ```bash
 # Test port allocation
-./scripts/allocate-ports.sh 2
+./skills/worktree-manager/scripts/allocate-ports.sh 2
 
 # Test registry operations
 cat ~/.claude/worktree-registry.json | jq '.worktrees[]'
 
 # Test launch agent (requires an existing worktree path)
-./scripts/launch-agent.sh ~/tmp/worktrees/some-project/some-branch "Test task"
+./skills/worktree-manager/scripts/launch-agent.sh ~/tmp/worktrees/some-project/some-branch "Test task"
 
 # Test status
-./scripts/status.sh
-./scripts/status.sh --project worktree-manager-skill
+./skills/worktree-manager/scripts/status.sh
+./skills/worktree-manager/scripts/status.sh --project worktree-manager-skill
 
 # Test cleanup
-./scripts/cleanup.sh project-name feature/branch-name
+./skills/worktree-manager/scripts/cleanup.sh project-name feature/branch-name
+
+# Validate plugin structure (if claude CLI is installed)
+claude plugin validate .
 ```
 
 ### Manual Operations (when scripts fail)
@@ -187,7 +207,7 @@ When creating multiple worktrees:
 
 ## Project-Specific Configuration
 
-Projects can optionally provide `.claude/worktree.json` for custom settings (see `templates/worktree.json` for schema). This overrides default behavior for:
+Projects can optionally provide `.claude/worktree.json` for custom settings (see `skills/worktree-manager/templates/worktree.json` for schema). This overrides default behavior for:
 - Port count and service names
 - Custom install commands
 - Validation start/stop/healthcheck commands
@@ -195,7 +215,7 @@ Projects can optionally provide `.claude/worktree.json` for custom settings (see
 
 ## Terminal Support
 
-The skill supports multiple terminals via `config.json`:
+The skill supports multiple terminals via `skills/worktree-manager/config.json`:
 - `ghostty` (default)
 - `iterm2`
 - `tmux`
@@ -203,7 +223,7 @@ The skill supports multiple terminals via `config.json`:
 - `kitty`
 - `alacritty`
 
-Each has different launch syntax implemented in `scripts/launch-agent.sh:84-144`.
+Each has different launch syntax implemented in `skills/worktree-manager/scripts/launch-agent.sh:84-144`.
 
 ## Requirements
 
@@ -214,7 +234,7 @@ Each has different launch syntax implemented in `scripts/launch-agent.sh:84-144`
 
 ## Important Notes
 
-1. **Scripts are helpers, not requirements**: Every operation can be done manually with standard Unix tools. SKILL.md documents both approaches.
+1. **Scripts are helpers, not requirements**: Every operation can be done manually with standard Unix tools. `skills/worktree-manager/SKILL.md` documents both approaches.
 
 2. **Global registry is source of truth**: Always check/update `~/.claude/worktree-registry.json` for port allocations and worktree tracking.
 
