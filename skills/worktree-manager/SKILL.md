@@ -28,8 +28,8 @@ Manage parallel development across ALL projects using git worktrees with Claude 
 | File | Purpose |
 |------|---------|
 | `~/.claude/worktree-registry.json` | **Global registry** - tracks all worktrees across all projects |
-| `~/.claude/skills/worktree-manager/config.json` | **Skill config** - terminal, shell, port range settings |
-| `~/.claude/skills/worktree-manager/scripts/` | **Helper scripts** - optional, can do everything manually |
+| `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json` | **Skill config** - terminal, shell, port range settings |
+| `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/` | **Helper scripts** - optional, can do everything manually |
 | `~/tmp/worktrees/` | **Worktree storage** - all worktrees live here |
 | `.claude/worktree.json` (per-project) | **Project config** - optional custom settings |
 
@@ -283,7 +283,7 @@ For EACH branch (can run in parallel):
       WORKTREE_PATH=~/tmp/worktrees/$PROJECT/$BRANCH_SLUG
 
 2. ALLOCATE PORTS
-   Option A (script): ~/.claude/skills/worktree-manager/scripts/allocate-ports.sh 2
+   Option A (script): ~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/allocate-ports.sh 2
    Option B (manual): Find 2 unused ports from 8100-8199, add to registry
 
 3. CREATE WORKTREE
@@ -306,11 +306,11 @@ For EACH branch (can run in parallel):
    d. If FAILS: report error but continue with other worktrees
 
 7. REGISTER IN GLOBAL REGISTRY
-   Option A (script): ~/.claude/skills/worktree-manager/scripts/register.sh ...
+   Option A (script): ~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/register.sh ...
    Option B (manual): Update ~/.claude/worktree-registry.json with jq
 
 8. LAUNCH AGENT
-   Option A (script): ~/.claude/skills/worktree-manager/scripts/launch-agent.sh $WORKTREE_PATH "task"
+   Option A (script): ~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/launch-agent.sh $WORKTREE_PATH "task"
    Option B (manual): Open terminal manually, cd to path, run claude
 
 AFTER ALL COMPLETE:
@@ -322,8 +322,8 @@ AFTER ALL COMPLETE:
 
 **With script:**
 ```bash
-~/.claude/skills/worktree-manager/scripts/status.sh
-~/.claude/skills/worktree-manager/scripts/status.sh --project my-project
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/status.sh
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/status.sh --project my-project
 ```
 
 **Manual:**
@@ -360,7 +360,7 @@ tmux new-session -d -s "wt-$PROJECT-$BRANCH_SLUG" -c "$WORKTREE_PATH" "bash -c '
 
 **With script:**
 ```bash
-~/.claude/skills/worktree-manager/scripts/cleanup.sh my-project feature/auth --delete-branch
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/cleanup.sh my-project feature/auth --delete-branch
 ```
 
 **Manual cleanup:**
@@ -515,21 +515,21 @@ You:
 
 ## Script Reference
 
-Scripts are in `~/.claude/skills/worktree-manager/scripts/`
+Scripts are in `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/`
 
 ### allocate-ports.sh
 ```bash
-~/.claude/skills/worktree-manager/scripts/allocate-ports.sh <count>
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/allocate-ports.sh <count>
 # Returns: space-separated port numbers (e.g., "8100 8101")
 # Automatically updates registry
 ```
 
 ### register.sh
 ```bash
-~/.claude/skills/worktree-manager/scripts/register.sh \
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/register.sh \
   <project> <branch> <branch-slug> <worktree-path> <repo-path> <ports> [task]
 # Example:
-~/.claude/skills/worktree-manager/scripts/register.sh \
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/register.sh \
   "my-project" "feature/auth" "feature-auth" \
   "$HOME/tmp/worktrees/my-project/feature-auth" \
   "/path/to/repo" "8100,8101" "Implement OAuth"
@@ -537,26 +537,26 @@ Scripts are in `~/.claude/skills/worktree-manager/scripts/`
 
 ### launch-agent.sh
 ```bash
-~/.claude/skills/worktree-manager/scripts/launch-agent.sh <worktree-path> [task]
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/launch-agent.sh <worktree-path> [task]
 # Opens new terminal window (Ghostty by default) with Claude Code
 ```
 
 ### status.sh
 ```bash
-~/.claude/skills/worktree-manager/scripts/status.sh [--project <name>]
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/status.sh [--project <name>]
 # Shows all worktrees, or filtered by project
 ```
 
 ### cleanup.sh
 ```bash
-~/.claude/skills/worktree-manager/scripts/cleanup.sh <project> <branch> [--delete-branch]
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/cleanup.sh <project> <branch> [--delete-branch]
 # Kills ports, removes worktree, updates registry
 # --delete-branch also removes local and remote git branches
 ```
 
 ### release-ports.sh
 ```bash
-~/.claude/skills/worktree-manager/scripts/release-ports.sh <port1> [port2] ...
+~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/release-ports.sh <port1> [port2] ...
 # Releases ports back to pool
 ```
 
@@ -564,7 +564,7 @@ Scripts are in `~/.claude/skills/worktree-manager/scripts/`
 
 ## Skill Config
 
-Location: `~/.claude/skills/worktree-manager/config.json`
+Location: `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json`
 
 ```json
 {
@@ -634,7 +634,7 @@ find ~/tmp/worktrees -maxdepth 2 -type d
 **You:**
 1. Detect project: `obsidian-ai-agent` (from git remote)
 2. Detect package manager: `uv` (found uv.lock)
-3. Allocate 4 ports: `~/.claude/skills/worktree-manager/scripts/allocate-ports.sh 4` → `8100 8101 8102 8103`
+3. Allocate 4 ports: `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/allocate-ports.sh 4` → `8100 8101 8102 8103`
 4. Create worktrees:
    ```bash
    mkdir -p ~/tmp/worktrees/obsidian-ai-agent
@@ -655,9 +655,9 @@ find ~/tmp/worktrees -maxdepth 2 -type d
 8. Register both worktrees in `~/.claude/worktree-registry.json`
 9. Launch agents:
    ```bash
-   ~/.claude/skills/worktree-manager/scripts/launch-agent.sh \
+   ~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/launch-agent.sh \
      ~/tmp/worktrees/obsidian-ai-agent/feature-dark-mode "Implement dark mode toggle"
-   ~/.claude/skills/worktree-manager/scripts/launch-agent.sh \
+   ~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/launch-agent.sh \
      ~/tmp/worktrees/obsidian-ai-agent/fix-login-bug "Fix login redirect bug"
    ```
 10. Report:

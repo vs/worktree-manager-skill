@@ -37,9 +37,8 @@ This repository follows the Claude Code marketplace plugin structure:
 └── cover.png                # Skill cover image
 ```
 
-**Installation locations:**
-- Marketplace install: `~/.claude/plugins/worktree-manager-plugin/`
-- Manual install: `~/.claude/plugins/worktree-manager/`
+**Installation location:**
+`~/.claude/plugins/marketplaces/worktree-manager-marketplace/`
 
 ### Global Registry Schema
 
@@ -215,7 +214,7 @@ Projects can optionally provide `.claude/worktree.json` for custom settings (see
 
 ## Terminal Support
 
-The skill supports multiple terminals via `skills/worktree-manager/config.json`:
+The skill supports multiple terminals via `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json`:
 - `ghostty` (default)
 - `iterm2`
 - `tmux`

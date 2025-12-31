@@ -18,24 +18,19 @@ A Claude Code skill for managing parallel development environments using git wor
 
 ### Manual Installation
 
-Clone this repo into your Claude skills directory:
+Clone this repo into your Claude plugins directory:
 
 ```bash
-# Global installation (available in all projects)
-git clone git@github.com:Wirasm/worktree-manager-skill.git ~/.claude/plugins/worktree-manager
-
-# Or project-specific (available only in that project)
-git clone git@github.com:Wirasm/worktree-manager-skill.git .claude/plugins/worktree-manager
+git clone git@github.com:Wirasm/worktree-manager-skill.git ~/.claude/plugins/marketplaces/worktree-manager-marketplace
 ```
 
 Restart Claude Code after installation.
 
 ## Configuration
 
-Edit the config file to customize (location depends on installation method):
+Edit the config file to customize:
 
-**Marketplace install:** `~/.claude/plugins/worktree-manager-plugin/skills/worktree-manager/config.json`
-**Manual install:** `~/.claude/plugins/worktree-manager/skills/worktree-manager/config.json`
+`~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json`
 
 ```json
 {
