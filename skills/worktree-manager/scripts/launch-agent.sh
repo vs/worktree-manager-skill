@@ -103,9 +103,12 @@ case "$TERMINAL" in
     iterm2|iterm)
         osascript <<EOF
 tell application "iTerm2"
-    create window with default profile
-    tell current session of current window
-        write text "cd '$WORKTREE_PATH' && $CLAUDE_CMD"
+    activate
+    tell current window
+        create tab with default profile
+        tell current session
+            write text "cd '$WORKTREE_PATH' && $CLAUDE_CMD"
+        end tell
     end tell
 end tell
 EOF
