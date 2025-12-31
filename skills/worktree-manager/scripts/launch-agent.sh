@@ -19,12 +19,21 @@ if [ -z "$WORKTREE_PATH" ]; then
     exit 1
 fi
 
-# Find script directory and config
+# Find config file (user config takes priority over bundled default)
+USER_CONFIG="${HOME}/.claude/worktree-config.json"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-CONFIG_FILE="$SCRIPT_DIR/../config.json"
+BUNDLED_CONFIG="$SCRIPT_DIR/../config.json"
+
+if [ -f "$USER_CONFIG" ]; then
+    CONFIG_FILE="$USER_CONFIG"
+elif [ -f "$BUNDLED_CONFIG" ]; then
+    CONFIG_FILE="$BUNDLED_CONFIG"
+else
+    CONFIG_FILE=""
+fi
 
 # Load config (with defaults)
-if [ -f "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
+if [ -n "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
     TERMINAL=$(jq -r '.terminal // "ghostty"' "$CONFIG_FILE")
     SHELL_CMD=$(jq -r '.shell // "bash"' "$CONFIG_FILE")
     CLAUDE_CMD=$(jq -r '.claudeCommand // "claude --dangerously-skip-permissions"' "$CONFIG_FILE")

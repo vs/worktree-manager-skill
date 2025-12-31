@@ -28,7 +28,7 @@ Manage parallel development across ALL projects using git worktrees with Claude 
 | File | Purpose |
 |------|---------|
 | `~/.claude/worktree-registry.json` | **Global registry** - tracks all worktrees across all projects |
-| `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json` | **Skill config** - terminal, shell, port range settings |
+| `~/.claude/worktree-config.json` | **User config** - terminal, shell, port range (takes priority over bundled defaults) |
 | `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/scripts/` | **Helper scripts** - optional, can do everything manually |
 | `~/tmp/worktrees/` | **Worktree storage** - all worktrees live here |
 | `.claude/worktree.json` (per-project) | **Project config** - optional custom settings |
@@ -564,7 +564,7 @@ Scripts are in `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skil
 
 ## Skill Config
 
-Location: `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json`
+Location: `~/.claude/worktree-config.json` (user config takes priority over bundled defaults)
 
 ```json
 {

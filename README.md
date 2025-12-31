@@ -28,9 +28,9 @@ Restart Claude Code after installation.
 
 ## Configuration
 
-Edit the config file to customize:
+Create a config file to customize (user config takes priority over bundled defaults):
 
-`~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json`
+`~/.claude/worktree-config.json`
 
 ```json
 {

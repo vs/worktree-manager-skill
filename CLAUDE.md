@@ -214,7 +214,7 @@ Projects can optionally provide `.claude/worktree.json` for custom settings (see
 
 ## Terminal Support
 
-The skill supports multiple terminals via `~/.claude/plugins/marketplaces/worktree-manager-marketplace/skills/worktree-manager/config.json`:
+The skill supports multiple terminals. Configure via `~/.claude/worktree-config.json` (user config takes priority over bundled defaults):
 - `ghostty` (default)
 - `iterm2`
 - `tmux`

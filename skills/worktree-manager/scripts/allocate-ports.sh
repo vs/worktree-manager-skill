@@ -18,13 +18,22 @@ if ! [[ "$COUNT" =~ ^[0-9]+$ ]] || [ "$COUNT" -lt 1 ]; then
     exit 1
 fi
 
-# Find config and registry
+# Find config file (user config takes priority over bundled default)
+USER_CONFIG="${HOME}/.claude/worktree-config.json"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-CONFIG_FILE="$SCRIPT_DIR/../config.json"
+BUNDLED_CONFIG="$SCRIPT_DIR/../config.json"
 REGISTRY="${HOME}/.claude/worktree-registry.json"
 
+if [ -f "$USER_CONFIG" ]; then
+    CONFIG_FILE="$USER_CONFIG"
+elif [ -f "$BUNDLED_CONFIG" ]; then
+    CONFIG_FILE="$BUNDLED_CONFIG"
+else
+    CONFIG_FILE=""
+fi
+
 # Load port pool from config
-if [ -f "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
+if [ -n "$CONFIG_FILE" ] && command -v jq &> /dev/null; then
     PORT_START=$(jq -r '.portPool.start // 8100' "$CONFIG_FILE")
     PORT_END=$(jq -r '.portPool.end // 8199' "$CONFIG_FILE")
 else
