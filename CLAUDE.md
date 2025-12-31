@@ -6,7 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Claude Code skill for managing parallel development environments using git worktrees. The skill automates worktree creation, dependency installation, port allocation, and launching Claude Code agents in separate terminal windows.
 
-**Core concept**: All worktrees are stored centrally at `~/tmp/worktrees/` and tracked in a global registry at `~/.claude/worktree-registry.json`. Each worktree gets unique ports allocated from a global pool (8100-8199) to avoid conflicts across all projects.
+**Core concept**: All worktrees are stored centrally (location configurable via `~/.claude/worktree-config.json`) and tracked in a global registry at `~/.claude/worktree-registry.json`. Each worktree gets unique ports allocated from a global pool (8100-8199) to avoid conflicts across all projects.
+
+**CRITICAL**: Before any worktree operation, ALWAYS read `~/.claude/worktree-config.json` first to get the user's `worktreeBase` setting:
+```bash
+WORKTREE_BASE=$(cat ~/.claude/worktree-config.json 2>/dev/null | jq -r '.worktreeBase // "~/tmp/worktrees"' | sed "s|^~|$HOME|")
+```
+Default to `~/tmp/worktrees` only if the config file doesn't exist or doesn't specify `worktreeBase`.
 
 ## Architecture
 
@@ -53,7 +59,7 @@ Location: `~/.claude/worktree-registry.json`
       "repoPath": "/path/to/original/repo",
       "branch": "feature/auth",
       "branchSlug": "feature-auth",
-      "worktreePath": "~/tmp/worktrees/project-name/feature-auth",
+      "worktreePath": "$WORKTREE_BASE/project-name/feature-auth",
       "ports": [8100, 8101],
       "createdAt": "2025-12-31T10:00:00Z",
       "validatedAt": "2025-12-31T10:02:00Z",
@@ -145,7 +151,7 @@ jq '.worktrees += [{
   "repoPath": "/path/to/repo",
   "branch": "feature/auth",
   "branchSlug": "feature-auth",
-  "worktreePath": "~/tmp/worktrees/my-project/feature-auth",
+  "worktreePath": "$WORKTREE_BASE/my-project/feature-auth",
   "ports": [8100, 8101],
   "createdAt": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
   "validatedAt": null,
@@ -171,7 +177,7 @@ cat ~/.claude/worktree-registry.json | jq '.worktrees[] | select(.branch | conta
 ## Key Architectural Patterns
 
 ### Centralized Storage
-All worktrees live in `~/tmp/worktrees/<project>/<branch-slug>/` regardless of which project they belong to. This enables:
+All worktrees live in `$WORKTREE_BASE/<project>/<branch-slug>/` (where `$WORKTREE_BASE` comes from user config, default `~/tmp/worktrees`). This enables:
 - Global port management across all projects
 - Centralized cleanup and status checks
 - Consistent agent launching
